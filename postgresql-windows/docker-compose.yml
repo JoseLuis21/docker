@@ -1,0 +1,42 @@
+version: '3.1'
+services:
+  postgresdb:
+    image: postgres:alpine
+    container_name: postgres_container
+    volumes: 
+      - psql:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - network-postgres
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.cl
+      PGADMIN_DEFAULT_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata:z
+    depends_on: postgresdb
+    volumes:
+        - ./pgadmin:/root/.pgadmin
+    restart: always
+    ports:
+      - "5433:80"
+    depends_on:
+      - postgresdb
+    networks:
+      - network-postgres
+    
+volumes:
+  psql:
+
+networks:
+  network-postgres:
+      name: network-postgres
+      driver: bridge
+      #docker-compose down --remove-orphans
+      #docker-compose up --build

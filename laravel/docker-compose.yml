@@ -1,0 +1,50 @@
+version: '3.5'
+services:
+
+  #PHP Service
+  gsoft_control:
+    image: github.com/joseluis21/laravelgeneral
+    container_name: gsoft_control
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www
+    ports: 
+      - "9003:9000"
+    volumes:
+      - ./:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - network-postgres
+
+  #Nginx Service
+  webservercontrol:
+    image: nginx
+    container_name: webservercontrol
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - gsoft_control
+    ports:
+      - "8082:80"
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      # - ./nginx/:/etc/nginx/
+    networks:
+      - network-postgres
+
+#Docker Networks
+networks:
+  network-postgres:
+    external:
+      name: network-postgres
+
+#docker-compose up -d
+#docker-compose down //Elimina todo los contenedores
+#docker-compose exec gsoft_control composer install
+#docker-compose exec gsoft_control php artisan key:generate
+#docker-compose exec gsoft_control php artisan migrate --seed
+#docker-compose exec gsoft_control php artisan config:cache
+#docker-compose stop
+#docker rm -f ID
+#docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=12345678 -p 3306:3306 -d mysql
