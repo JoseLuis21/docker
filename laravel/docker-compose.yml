@@ -8,8 +8,6 @@ services:
     restart: unless-stopped
     tty: true
     working_dir: /var/www
-    ports: 
-      - "9003:9000"
     volumes:
       - ./:/var/www
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
