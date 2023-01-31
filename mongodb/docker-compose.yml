@@ -8,8 +8,17 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - './data:/data/db'
+    ports:
+      - "27017:27017"
+    networks:
+      - apps-network
+
 #Docker Networks
 networks:
   apps-network:
     external:
       name: apps-network
+
+# Base de datos por defecto es admin
