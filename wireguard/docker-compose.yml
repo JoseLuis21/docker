@@ -1,0 +1,26 @@
+services:
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - SERVERURL=1.2.3.4 #ip fija del servidor Agregar puerto udp para aceptar las conexiones
+      - SERVERPORT=51820 #puerto abrir tcp y udp
+      - PEERS=1 #cantidad de usuarios
+      - PEERDNS=1.1.1.1, 1.0.0.1 #dns
+      - INTERNAL_SUBNET=10.0.0.0/20 #red privada
+      - ALLOWEDIPS=0.0.0.0/0 #ip aceptadas para la conexion
+      - LOG_CONFS=true #optional
+    volumes:
+      - /path/to/appdata/config:/config
+      - /lib/modules:/lib/modules #optional
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
